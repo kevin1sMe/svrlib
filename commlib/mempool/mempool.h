@@ -11,7 +11,14 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <sstream>
+#include <string>
 
+#ifdef __i386__
+#define ALIGN(sz) ((sz + 3) & ~3)
+#else
+#define ALIGN(sz) ((sz + 7) & ~7)
+#endif
 
 template <typename T>
 class mempool 
@@ -75,13 +82,25 @@ public:
         _header()->free_list = _deref(p);
     }
 
+    std::string DumpHeader()const {
+        std::stringstream str;
+        str<<"header:{ "
+            <<" max_size:" << _header()->max_size
+            <<" alloc_size:" << _header()->alloc_size
+            <<" data_size:" << _header()->data_size
+            <<" block_size:" << _header()->block_size
+            <<" free_list:"<< _header()->free_list;
+        return str.str();
+    }
+
+
 private:
 
     inline header* _header()const{
         return (header*) mem_header_;
     }
     inline size_t _block_size() const{
-        return sizeof(node) + sizeof(T);
+        return ALIGN(sizeof(node) + sizeof(T));
     }
     inline size_t _data_size() const{
         return sizeof(T);
@@ -107,7 +126,7 @@ private:
             return NULL;
         }
 
-        _header()->alloc_size += _block_size();
+        _header()->alloc_size += _header()->block_size;
 
         p->next = 0;
         return (T*)p->data;

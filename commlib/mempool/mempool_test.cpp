@@ -3,19 +3,23 @@
 #include "mempool.h"
 
 struct mydata {
+    char name[9];
     int  age;
-    char name[16];
 };
 
 #define ALLOC_BYTES  128
 
 int 
 main(int argc, char** argv) {
+
+    printf("sizeof(mydata):%lu\n", sizeof(mydata));
     void *mem = malloc(ALLOC_BYTES);
 
     mempool<mydata> pool;
     
     pool.init(mem, ALLOC_BYTES);
+
+    printf("Dump:%s\n", pool.DumpHeader().c_str());
 
     struct mydata *data = pool.malloc();
     printf("data:%p mem:%p\n",data, mem);
@@ -26,6 +30,8 @@ main(int argc, char** argv) {
     snprintf(data->name, sizeof(data->name), "%s", "kevin");
 
     printf("data:%p [%s] age:%d\n",data,  data->name, data->age);
+    printf("Dump:%s\n", pool.DumpHeader().c_str());
+
 
     data = pool.malloc();
     data->age = 2;
@@ -33,13 +39,18 @@ main(int argc, char** argv) {
 
     printf("data:%p [%s] age:%d\n", data, data->name, data->age);
 
+    printf("Dump:%s\n", pool.DumpHeader().c_str());
 
     //free one
     pool.free(tmp);
 
+    printf("Dump:%s\n", pool.DumpHeader().c_str());
+
+
     //realloc
     data = pool.malloc();
     printf("data:%p\n", data);
+
 
 
     free(mem);
