@@ -2,7 +2,7 @@
 #   FileName: mempool.h
 #     Author: kevinlin
 #      Email: linjiang1205@qq.com
-#   History:  a mempool , as you can see, it's not a thread-safe lib
+#   History:  a mempool , not thread-safe
 # LastChange: 2014-05-07 23:31:10
 ========================================================================*/
 #ifndef _MEM_POOL_H_
@@ -89,7 +89,9 @@ public:
             <<" alloc_size:" << _header()->alloc_size
             <<" data_size:" << _header()->data_size
             <<" block_size:" << _header()->block_size
-            <<" free_list:"<< _header()->free_list;
+            <<" free_list:"<< _header()->free_list
+            <<" }";
+
         return str.str();
     }
 
