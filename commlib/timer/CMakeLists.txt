@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 2.8)
 
 project(timer)
 
@@ -13,7 +13,7 @@ ADD_EXECUTABLE(boost_asio_timer ${SRC_ASIO_LIST})
 
 SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".so")
 FIND_LIBRARY(BOOST_SYSTEM 
-    NAMES libboost_system
+    NAMES boost_system
     PATHS /usr/local/boost/lib
     NO_DEFAULT_PATH)
 IF(BOOST_SYSTEM)
